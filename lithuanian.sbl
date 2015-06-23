@@ -1,0 +1,145 @@
+ls ( stem )
+//Stemmer for test1.txt data
+/* Special characters in Unicode Latin-1 and Latin Extended-A */
+// ' nosine 
+stringdef a'   decimal '261'  // ą a + ogonek
+stringdef e'   decimal '281'  // ę e + ogonek
+stringdef i'   decimal '303'  // į i + ogonek
+stringdef u'   decimal '371'  // ų u + ogonek
+
+// . taskas
+stringdef e.   decimal '279'  // ė e + dot
+
+// - ilgoji
+stringdef u-   decimal '363'  // ū u + macron 
+
+// * varnele
+stringdef c*   decimal '269'  // č c + caron (haček)
+stringdef s*   decimal '353'  // š s + caron (haček)
+stringdef z*   decimal '382'  // ž z + caron (haček)
+
+// [C](VC)^m[V|C]
+// definitions of variables for
+// p1 - position of m = 0
+// p2 - position of m = 1
+integers ( p1 p2 )
+
+// booleans - to be commented
+// PRE
+// FOUND
+// CHANGE  
+booleans ( PRE FOUND CHANGE )
+
+// escape symbols for substituting lithuanian characters
+stringescapes { }
+
+// groupings
+// v - lithuanian vowels
+groupings ( v )
+
+// v - all lithuanian vowels
+define v 'aeiyou{a'}{e'}{i'}{u'}{e.}{u-}'
+
+// all lithuanian stemmer routines: 5 steps 
+routines (
+   step2 R1 R2 step1 fix_chdz fix_gd
+)
+
+
+
+backwardmode(
+  define R1 as $p1 <= cursor
+  define step1 as repeat (
+	 setlimit tomark p1 for ([substring]) R1  among(
+      'a' 'ai' 'ain' 'aut' 'ais' 'al' 'ams' 'as' 'atv' 'au' 'auj' 'aus' 'avim'
+      'e' 'ei' 'eiv' 'um' 'ekl' 'el' 'enie' 'enims' 'enis' 'eniu' 'ens' 'enyb' 'ers' 'es' 
+      'i' 'ia' 'iai' 'iais' 'iams' 'ias' 'iau' 'iaus' 'id' 'ie' 'ien' 'ienoj' 'ies' 'iet' 'ij' 'ik' 'ikl' 
+      'il'  'im' 'imas' 'imi' 'imis' 'ims'  'io' 'ioje' 'iomis' 'ioms' 'ios' 'iose' 'is' 'iu' 
+      'iui' 'iuje' 'iuk' 'iumi' 'iuose' 'ius' 'i{a'}' 'i{s*}k' 'i{u'}' 'j{u'}' 'i{u-}k{s*}' 'in{e'}' 'in{e.}' 'ij{a'}' 'iuo' 'iaud'
+      'ij{u'}'
+      'jim'
+      'kl'
+      's'
+      'm' 
+      'o' 'oj' 'oje' 'ojant' 'iniai' 'ojim' 'ok' 'ok{s*}n' 'iant' 'omis' 'odam' 'ni{a'}j' 'oms' 'os' 'ose' 'ov' 'o{c*}'
+      'sen' 'sm' 'sn'
+       '{z*}ti'  'ti' 'tin' 'toj' 'ing' 'tu' 'tuk' 'tuv' 'tyn'  'tyv' 'tydam'
+      'u' 'ui' 'uje' 'uk' 'ul' 'uly'  'umi' 'umis'  'uol' 'uomen' 'uose' 'us' 'ut' 'u{z*}'
+      'y' 'yb' 'yje' 'amet' 'yk' 'ykl' 'ym' 'yn' 'ys' 'yse' 'yst' 'yt'
+      '{a'}'
+      '{e'}'
+      '{e.}' '{e.}j' '{e.}je' '{e.}mis' '{e.}ms' '{e.}n' '{e.}s' '{e.}se' '{e.}z' '{e.}l'
+      '{i'}'
+      '{s*}{e.}'
+      '{u'}'
+      '{u-}n'
+      '{u-}s'
+      'an'
+    )
+
+    delete
+  )
+
+  define step2 as repeat (
+     setlimit tomark p1 for ([substring]) among(
+       'tydam' 'os' 'uoda' 'uodam'  'audam' 
+      'tuodav' 'tuoj' 'uodav'
+      'nam{e.}s' 'nasi' 'nat{e.}s' 'niesi' 'nuosi' '{z*}dam'
+      'indav' 'audav' 'indam' 'ind' 'odav' 'voj' 'iuot'
+      'uot' 'sies' 'sim{e.}s' 'sit{e.}s' 'siuos' 'uojat' 'uod' 'iej' 'int'
+       'd{e.}k'
+      '{e.}dam' '{e.}dav' 'gdav' 'gd' 'iuodam' 'aut' 'ią' 'iav' 'um' 'dav' 'davaisi' 'davausi' 'davom{e.}s' 'davosi' 'davotės' 'kis'
+     'auj' 'aisi' 'ausi' 'esn' 'es'
+     'tumei' 'tum{e.}m{e.}s' 'tum{e.}m{e.}' 'tum{e.}s' 'tum{e.}' 'tut{e.}s' 'tut{e.}' 't{u'}si'
+      'ot'  
+     '{e.}tum' '{e.}m' '{e.}t' '{e.}s' '{e.}si' 'in' 'inink'
+     'ytum' 'ydav' 'ytume' 'ytum{e.}me' 'ytum{e.}te' 'ytute' 'yt{u-}' 'y{c*}iau'
+     'uriuo'
+     'si' 'sis' 'tis' 'sime' 'site' 'odam'
+     '{z*}iau'
+     '{c*}iau'
+     'av'
+     '{a'}j'
+     
+     
+   
+    
+    )
+    delete
+  )
+
+  define fix_chdz as ( 
+    [substring] among (
+      '{c*}' (<-'t' set CHANGE)
+      'd{z*}' (<-'d' set CHANGE)
+    )
+  )
+
+ define fix_gd as ( 
+    [substring] among (
+      'gd' (<-'g' set CHANGE)
+     
+    )
+  )
+
+)
+
+define stem as (
+
+  $p1 = limit
+  $p2 = limit
+    
+  do(
+    gopast v  gopast non-v  setmark p1
+    gopast v  gopast non-v  setmark p2
+	
+  )
+   
+  backwards (
+    do step1
+    do fix_chdz
+    do step2
+    fix_gd
+  )
+
+)
