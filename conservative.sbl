@@ -43,6 +43,7 @@ routines (
 )
 
 backwardmode(
+
   define R1 as $p1 <= cursor
   define step1 as (
 	 setlimit tomark p1 for ([substring]) R1  among(
@@ -59,11 +60,13 @@ backwardmode(
 
       'ai'   'iai'                // e.g. vyrai, keliai
       '{u'}' 'i{u'}'              // e.g. vyrų, kelių
-      'ams'  'iams'               // e.g. vyrams, broliams
+      'ams' 'am'                  // e.g. vyrams, vyram
+      'iams' 'iam'                // e.g. broliams, broliam
       'us'   'ius'                // e.g. vyrus, brolius
       'ais'  'iais'               // e.g. vyrais, keliais
       'uose' 'iuose' 'uos' 'iuos' // e.g. vyruose, keliuose, vyruos, keliuos
       'uosna' 'iuosna'            // e.g. vyruosna, keliuosna
+      'ysna'                      // žutysna
 
       'asis' 'aisi'               // e.g. sukimasis, sukimaisi
       'osi'  '{u'}si'             // e.g. sukimosi, sukimųsi
@@ -97,6 +100,7 @@ backwardmode(
       '{e.}mis'                   // e.g. gervėmis
       '{e.}se'                    // e.g. gervėse
       '{e.}sna'                   // e.g. gervėsna
+      '{e.}n'                     // žydaitėn
 
 
       // IV linksniuote
@@ -108,6 +112,7 @@ backwardmode(
       '{u-}s'                     // e.g. sūnūs
       'ums'                       // e.g. sūnums
       'umis'                      // e.g. sūnumis
+      'un' 'iun'                  // sūnun, administratoriun
 
 
       // V linksniuote
@@ -119,9 +124,11 @@ backwardmode(
       'ie' 'enie' 'erie'          // e.g. avie, vandenie, seserie
 
       'enys' 'erys'               // e.g. vandenys, seserys
+      'ien{u'}'                   // žverienų
       'en{u'}' 'er{u'}'           // e.g. vandenų, seserų
       'ims' 'enims' 'erims'       // e.g. avims, vandemins, seserims
       'enis'                      // e.g. vandenis
+      'imis'                      // žebenkštimis
       'enimis'                    // e.g. vandenimis
       'yse' 'enyse' 'eryse'       // e.g. avyse, vandenyse, seseryse
 
@@ -130,7 +137,6 @@ backwardmode(
       // (i)a linksniuotė
       'iem' 'iems'                // e.g. geriem, geriems
 
-      'am' 'iam'                  // e.g. naujam, mediniam
       'ame' 'iame'                // e.g. naujame, mediniame
 
 
@@ -148,9 +154,10 @@ backwardmode(
       // i asmenuotė
       'isi'                       // e.g. tikisi
       'im'                        // e.g. mylim
-      // 'ime'  negalima steminti, nes daiktavardžius sugadina, e.g. gėrime
+      'ime'  //negalima steminti, nes daiktavardžius sugadina, e.g. gėrime
       'im{e.}s'                   // e.g. tikimės
-      'it' 'ite' 'it{e.}s'        // e.g. mylit, mylite, tikitės
+      'it' 'ite'                  // e.g. mylit, mylite, tikitės
+      // 'it{e.}s' sugadina žodžius su priesaga -ait-ės pvz. žydaitės
 
       // o asmenuotė
       'ome' 'omės'                // e.g. mokome, bijomės
@@ -183,7 +190,8 @@ backwardmode(
 
       // tariamoji nuosaka
       '{c*}iau' '{c*}iausi'       // e.g. dirbčiau
-      'tum' 'tumei' 'tumeisi'     // e.g. dirbtu, dirbtumei, mokytumeisi
+      'tum' 'tumei'               // e.g. dirbtum, dirbtumei
+      'tumeis' 'tumeisi'          // e.g. mokytumeis, mokytumeisi
       // 't{u'}' nes blogai batutų -> batu
       't{u'}si'                   // e.g. mokytųsi
       'tume' 'tum{e.}m'           // e.g. dirtume, dirbtumėm
@@ -194,16 +202,32 @@ backwardmode(
       'tum{e.}t{e.}s'             // e.g. mokytumėtės
 
       // liepiamoji nuosaka
-      'k' 'ki' 'kis'              // e.g. dirbk, dirbki, mokykis
+      'k' 'ki'                    // e.g. dirbk, dirbki, mokykis
+      // 'kis' sugadina viln-išk-is
       // 'kime' negalima, nes pirkime
       'kim{e.}s'                  // e.g. mokykimės
 
       // bendratis
+      'uoti' 'iuoti'              // meluoti, dygsniuoti
+      'auti' 'iauti'              // draugauti, girtuokliauti
+      'oti' 'ioti'                // dovanoti, meškerioti
+      '{e.}ti'                    // auklėti
+      'yti'                       // akyti
+      'inti'                      // auginti
+      'in{e.}ti'                  // blusinėti
+      'enti'                      // gyventi
+      'tel{e.}ti'                 // bumbtelėti
+      'ter{e.}ti'                 // bumbterėti
+
       'ti'                        // e.g. skalbti
       // 'tis' geriau nenumesti, nes rytmetis -> rytme
 
       // dalyviai
       '{a'}s' 'i{a'}s' '{i'}s'    // e.g. dirbąs, žaidžiąs, gulįs
+      't{u'}s'                    // suktųs -> suk
+      'sim{e.}s'                  // suksimės
+      'sit{e.}s'                  // suksitės
+      'kite'                      // supkite
     )
 
     delete
@@ -231,6 +255,7 @@ backwardmode(
       'uliuk'                     // e.g. maž-uliuk-as
       'ut{e.}ait'                 // e.g. maž-utėlait-is
       'ok'                        // e.g. did-ok-as
+      'iok'                       // višč-iok-as
       'sv' '{s*}v' 'zgan'         // e.g. sal-sv-as, pilk-šv-as, bal-zgan-as
       'op' 'iop'                  // e.g. dvej-op-as, viener-iop-as
       'ain'                       // e.g. apval-ain-as
@@ -272,6 +297,11 @@ backwardmode(
 
       // pusdalyviai
       'dam'                       // e.g. bėg-dam-as
+
+      'auj'                       // ūkininkauja
+      'jam'
+      'iau'
+      'am'                        // baiminimamsi
     )
 
     delete
@@ -287,7 +317,7 @@ backwardmode(
  define fix_gd as (
     [substring] among (
       'gd' (<-'g' set CHANGE)
-
+      //'{e.}k' (<-'{e.}g' set CHANGE)
     )
   )
 
