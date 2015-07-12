@@ -21,7 +21,7 @@ stringdef z*   decimal '382'  // ž z + caron (haček)
 // definitions of variables for
 // p1 - position of m = 0
 // p2 - position of m = 1
-integers ( p1 p2 )
+integers ( p1 p2 s)
 
 // booleans - to be commented
 // CHANGE
@@ -39,7 +39,7 @@ define v 'aeiyou{a'}{e'}{i'}{u'}{e.}{u-}'
 
 // all lithuanian stemmer routines: 4 steps
 routines (
-   step2 R1 step1 fix_chdz fix_gd
+   step2 R1 step1 fix_chdz fix_gd fix_conflicts
 )
 
 backwardmode(
@@ -124,8 +124,9 @@ backwardmode(
       'ie' 'enie' 'erie'          // e.g. avie, vandenie, seserie
 
       'enys' 'erys'               // e.g. vandenys, seserys
-      'ien{u'}'                   // žverienų
-      'en{u'}' 'er{u'}'           // e.g. vandenų, seserų
+      // 'ien{u'}'                   // žverienų
+      // 'en{u'}' konfliktas su žandenų antenų  // e.g. vandenų
+      'er{u'}'                    // seserų
       'ims' 'enims' 'erims'       // e.g. avims, vandemins, seserims
       'enis'                      // e.g. vandenis
       'imis'                      // žebenkštimis
@@ -154,7 +155,7 @@ backwardmode(
       // i asmenuotė
       'isi'                       // e.g. tikisi
       'im'                        // e.g. mylim
-      'ime'  //negalima steminti, nes daiktavardžius sugadina, e.g. gėrime
+      //'ime'  // konfliktas, nes daiktavardžius sugadina, e.g. gėrime
       'im{e.}s'                   // e.g. tikimės
       'it' 'ite'                  // e.g. mylit, mylite, tikitės
       // 'it{e.}s' sugadina žodžius su priesaga -ait-ės pvz. žydaitės
@@ -165,7 +166,7 @@ backwardmode(
 
       // būtasis laikas
       // o asmenuotė
-      '{e.}jo' '{e.}josi'         // e.g. dirbosi, tikėjosi
+      '{e.}jo' '{e.}josi'         // e.g. tikėjo, tikėjosi
       'ot{e.}s'                   // e.g. tikėjotės
 
       // ė asmenuotė
@@ -194,7 +195,8 @@ backwardmode(
       'tumeis' 'tumeisi'          // e.g. mokytumeis, mokytumeisi
       // 't{u'}' nes blogai batutų -> batu
       't{u'}si'                   // e.g. mokytųsi
-      'tume' 'tum{e.}m'           // e.g. dirtume, dirbtumėm
+      // 'tume' konfliktas su 'šventume'
+      'tum{e.}m'                  // dirbtumėm
       'tum{e.}me'                 // e.g. dirbtumėme
       'tum{e.}m{e.}s'             // e.g. mokytumėmės
       'tute' 'tum{e.}t'           // e.g. dirbtute, dirbtumėt
@@ -220,7 +222,7 @@ backwardmode(
       'ter{e.}ti'                 // bumbterėti
 
       'ti'                        // e.g. skalbti
-      // 'tis' geriau nenumesti, nes rytmetis -> rytme
+      // 'tis' konfliktas, nes rytmetis -> rytme
 
       // dalyviai
       '{a'}s' 'i{a'}s' '{i'}s'    // e.g. dirbąs, žaidžiąs, gulįs
@@ -307,6 +309,38 @@ backwardmode(
     delete
   )
 
+  define fix_conflicts as (
+    [substring] among (
+      // 'lietuvaite' -> 'lietuvaitė', konfliktas su 'myl-ite'
+      'aite' (<-'ait{e.}' set CHANGE)
+      // 'lietuvaitės' -> 'lietuvaitė', konfliktas su 'myl-itės'
+      'ait{e.}s' (<-'ait{e.}' set CHANGE)
+
+      // ''ūs-uotės' -> 'ūs-uotė', konfliktas 'mokotės'
+      'uot{e.}s' (<-'uot{e.}' set CHANGE)
+      // ''ūs-uote' -> 'ūs-uotė', konfliktas 'mokote'
+      'uote' (<-'uot{e.}' set CHANGE)
+
+      // 'žerėjime' -> 'žėrėjimas', konfliktas su 'žais-ime'
+      '{e.}jime' (<-'{e.}jimas' set CHANGE)
+
+      // 'žvilgesiu' -> 'žvilgesys', konfliktas su 'dirb-siu'
+      'esiu' (<-'esys' set CHANGE)
+      // 'duobkasiu' -> 'duobkasys', konfliktas su 'pakasiu'
+      'asius' (<-'asys' set CHANGE)
+
+
+      // 'žioravime' -> 'žioravimas', konfliktas su 'myl-ime'
+      'avime' (<-'avimas' set CHANGE)
+      'ojime' (<-'ojimas' set CHANGE)
+
+      // 'advokatės' -> 'advokatė', konfliktas su 'dirb-atės'
+      'okat{e.}s' (<-'okat{e.}' set CHANGE)
+      // 'advokate' -> 'advokatė', konfliktas su 'dirb-ate'
+      'okate' (<-'okat{e.}' set CHANGE)
+    )
+  )
+
   define fix_chdz as (
     [substring] among (
       '{c*}' (<-'t' set CHANGE)
@@ -327,14 +361,19 @@ define stem as (
 
   $p1 = limit
   $p2 = limit
+  $s = size
 
   do(
+    // a-liejus. Dėl 'ajeras', reikėtų skiemenavimo
+    try (test 'a' $s > 6 hop 1)
+
     gopast v  gopast non-v  setmark p1
     gopast v  gopast non-v  setmark p2
 
   )
 
   backwards (
+    do fix_conflicts
     do step1
     do fix_chdz
     do step2
