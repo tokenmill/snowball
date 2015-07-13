@@ -240,7 +240,7 @@ backwardmode(
       // daiktavardziu priesagos
 
       // budvardziu priesagos
-      'in'                        // e.g. lauk-in-is
+      // 'in' // konfliktas su 'augintinis' ir 'akiniais' // e.g. lauk-in-is
       'ing'                       // e.g. tvark-ing-as
       'i{s*}k'                    // e.g. lenk-išk-as
       '{e.}t'                     // e.g. dem-ėt-as
@@ -340,6 +340,8 @@ backwardmode(
       'okate' (<-'okat{e.}' set CHANGE)
     )
   )
+
+
 
   define fix_chdz as (
     [substring] among (
