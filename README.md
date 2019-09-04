@@ -1,3 +1,7 @@
+<a href="http://www.tokenmill.lt">
+      <img src=".github/tokenmill-logo.svg" width="125" height="125" align="right" />
+</a>
+
 # snowball
 
 Old version of Snowball version of Porter stemmer for Lithuanian language is in the file `lithuanian.sbl`.
@@ -16,3 +20,9 @@ Current stemmer version uses length of the string to prevent overstemming. Stemm
 Whereas Lucene 4.10.1 implements `SnowballProgram` in such a way that attribute `current` is private, therefore `current.length()` doesn't compile for Lucene. Workaround is to substitute `current.length()` with `getCurrent().length()` on line 589.
 
 * `snowball` program was downloaded from [here](http://snowball.tartarus.org/dist/snowball_code.tgz).
+
+## License
+
+Copyright &copy; 2019 [TokenMill UAB](http://www.tokenmill.lt).
+
+Distributed under the The Apache License, Version 2.0.
